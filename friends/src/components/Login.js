@@ -1,63 +1,64 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { axiosWithAuth } from '../utils/axiosWithAuth';
 
 //Create a login form that authenticated the username and password
-//This one is just like the guided project
+//This one is just like the guided project but i'm using function component instead of class component here, using react hook useState
+//training kit has good example of functional component login page
 
-class Login extends React.Component {
-    state = {
-        credentials: {
-            username: "",
-            password: ""
-        }
-    };
+const initialCredentials = {
+    username: "",
+    password: ""
+}
 
-    handleChange = e => {
-        this.setState({
-            credentials: {
-                ...this.state.credentials,
-                [e.target.name]: e.target.value
-            }
-        });
-    };
+const Login = (props) => {
+    const [ isLoading, setIsLoading ] = useState(false)
+    const [ credentials, setCredentials ] = useState(initialCredentials)
+    //const [ error, setError ] = useState("")
 
-    login = e => {
+    const handleChange = e => {
+       setCredentials({...credentials, [e.target.name]: e.target.value})
+    }
+
+    const login = e => {
         e.preventDefault();
+        setIsLoading(true);
         axiosWithAuth()
-            .post("http://localhost:5000/api/login", {
-                username: "Lambda School",
-                password:"school"
-            })
+            .post("/api/login", credentials)
             .then(res => {
-                localStorage.setItem("token", JSON.stringify(res.data.payload));
-                this.props.history.push("/protected");
+                //console.log("Response from login", res)
+                localStorage.setItem("token", (res.data.payload));
+                props.history.push("/protected");
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log(err)
+                //setError(err.message);
+            })
+            .finally(() => {
+                setIsLoading(false)
+            })
     };
-
-    render() {
-        return (
-            <div>
-                <form onSubmit={this.login}>
-                    <input
-                        type="text" 
-                        name="username"
-                        value={this.state.credentials.username}
-                        onChange={this.handleChange}
-                        placeholder="Username..."
-                    />
-                    <input 
-                        type="password"
-                        name="password"
-                        value={this.state.credentials.password}
-                        onChange={this.handleChange}
-                        placeholder="Password..."
-                    />
-                    <button>Log In</button>
-                </form>
-            </div>
-        );
-    }    
+        console.log("Loading", isLoading)
+    return (
+        <div>
+            <form onSubmit={login}>
+                <input
+                    type="text" 
+                    name="username"
+                    value={credentials.username}
+                    onChange={handleChange}
+                    placeholder="Username..."
+                />
+                <input 
+                    type="password"
+                    name="password"
+                    value={credentials.password}
+                    onChange={handleChange}
+                    placeholder="Password..."
+                />
+                <button>Log In</button>
+            </form>
+        </div>
+    );
 };
 
 export default Login;

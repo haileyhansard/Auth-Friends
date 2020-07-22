@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Link, Switch } from 'react-router-dom';
 import './App.css';
 import Login from './components/Login';
-import FriendsList from './components/FriendsList';
+import FriendsPage from './components/FriendsPage';
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
@@ -20,9 +20,9 @@ function App() {
             </li>
           </ul>
           <Switch>
-          <PrivateRoute exact path="/protected" component={FriendsList}/>
+            <PrivateRoute exact path="/protected" component={FriendsPage}/>
             <Route path="/login" component={Login} />
-            <Route component={Login} />   
+            {/* <Route component={Login} />    */}
           </Switch>
       
     </div>

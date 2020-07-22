@@ -10,54 +10,63 @@ import { axiosWithAuth } from '../utils/axiosWithAuth';
 //     age: 24,
 //     email: 'joe@lambdaschool.com'
 // }
+const initialFriend = {
+    name: " ", 
+    age: " ", 
+    email: " "
+}
 
-const FriendForm = ({friends, setFriends}) => {
-    const [addFriend, setAddFriend] = useState({ name: "", age: "", email: ""});
-
-    const submitFriend = e => {
-        e.preventDefault();
-        axiosWithAuth()
-            .post("/api/friends", addFriend)
-            .then(res => setAddFriend(res.data))
-            .catch(err => console.log(err))
-
-            setAddFriend({name: "", age: "", email: ""});
-    }
-
+const FriendForm = (props) => {
+    const [friendData, setFriendData] = useState(initialFriend);
+    
     const handleChange = e => {
-        setAddFriend({
-            ...addFriend,
-            [e.target.name]: e.target.value,
+        setFriendData({
+            ...friendData, [e.target.name]: e.target.value,
         })
     }
 
-    return (
-        <form onSubmit={submitFriend}>
-            <input 
-                type="text"
-                name="name"
-                placeholder="Name..."
-                value={addFriend.name}
-                onChange={handleChange}
-            />
-            <input 
-                type="text"
-                name="age"
-                placeholder="Age..."
-                value={addFriend.age}
-                onChange={handleChange}
-            />
-            <input
-                type="email"
-                name="email"
-                placeholder="Email..."
-                value={addFriend.email}
-                onChange={handleChange} 
-            />
-            <button>Submit</button>
-        </form>
-    )
+    const handleSubmit = e => {
+        e.preventDefault();
+        axiosWithAuth()
+            .post("/api/friends", friendData)
+            .then(res => {
+                props.updateFriends(res.data)
+                setFriendData(initialFriend)
+            })
+            .catch(err => {
+                console.log('Error', err)
+            })
+    }
 
+    return (
+        <>
+            <h2>Add a Friend!</h2>
+            <form onSubmit={handleSubmit}>
+                <input 
+                    type="text"
+                    name="name"
+                    value={friendData.name}
+                    onChange={handleChange}
+                    placeholder="Name..."
+                />
+                <input 
+                    type="number"
+                    name="age"
+                    value={friendData.age}
+                    onChange={handleChange}
+                    placeholder="Age..."
+                />
+                <input
+                    type="email"
+                    name="email"
+                    value={friendData.email}
+                    onChange={handleChange} 
+                    placeholder="Email..."
+                />
+                <button>Submit</button>
+            </form>
+        </>
+    )
 };
 
 export default FriendForm;
