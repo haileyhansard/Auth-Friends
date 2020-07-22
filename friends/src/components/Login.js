@@ -1,5 +1,8 @@
 import React from 'react';
-import axios from 'axios';
+import { axiosWithAuth } from '../utils/axiosWithAuth';
+
+//Create a login form that authenticated the username and password
+//This one is just like the guided project
 
 class Login extends React.Component {
     state = {
@@ -20,7 +23,7 @@ class Login extends React.Component {
 
     login = e => {
         e.preventDefault();
-        axios
+        axiosWithAuth()
             .post("http://localhost:5000/api/login", {
                 username: "Lambda School",
                 password:"school"

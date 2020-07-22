@@ -9,8 +9,9 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-          Auth Friends App
-          <ul>
+        Auth Friends App
+      </header>
+          <ul className="links">
             <li>
               <Link to="/login">Login</Link>
             </li>
@@ -23,7 +24,7 @@ function App() {
             <Route path="/login" component={Login} />
             <Route component={Login} />   
           </Switch>
-      </header>
+      
     </div>
   );
 }
